@@ -8,6 +8,8 @@
 4. Build on Xcode
 
 # TODO
+* Add pull to refresh
+* Think of adding 'Redux' framework
 * Support Android
 
 

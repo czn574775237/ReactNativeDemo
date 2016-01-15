@@ -1,6 +1,6 @@
 import React from 'react-native';
 import routes from './routes';
-// import store from './store';
+import store from './store';
 
 var WINDOW_WIDTH = require('Dimensions').get('window').width;
 
@@ -40,21 +40,20 @@ class App extends React.Component {
 
   componentDidMount() {
     if (__DEV__) {
-      this._loadInitialState();
+      this._loadInitialState().then((res) => {
+        currentRoute = JSON.parse(res);
+        if (currentRoute && this._navigator &&
+          currentRoute.name !== 'Dashboard') {
+          this._navigator.push(currentRoute);
+        }
+      })
     }
   }
 
+  // !Note: 发现使用 ES7 async, await 会出现异常
   // 加载上一路由的历史
-  async _loadInitialState() {
-    try {
-      var currentRoute = await AsyncStorage.getItem(STRORAGE_KEY);
-      currentRoute = JSON.parse(currentRoute);
-      if (currentRoute && this._navigator) {
-        this._navigator.push(currentRoute);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  _loadInitialState() {
+    return AsyncStorage.getItem(STRORAGE_KEY);
   }
 
   render() {
@@ -100,6 +99,7 @@ class App extends React.Component {
           let { route } = event.data;
 
           this._saveCurrentRoute(JSON.stringify(route));
+          // store.setItem(STRORAGE_KEY, JSON.stringify(route));
         }
 
         this._listeners = [
@@ -110,9 +110,9 @@ class App extends React.Component {
     }
   }
 
-  async _saveCurrentRoute(currentRoute: string) {
+  _saveCurrentRoute(currentRoute: String, callback: Function) {
     try {
-      await AsyncStorage.setItem(STRORAGE_KEY, currentRoute);
+      AsyncStorage.setItem(STRORAGE_KEY, currentRoute, callback);
     } catch (error) {
       console.log(error);
     }

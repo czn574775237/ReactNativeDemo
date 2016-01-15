@@ -31,6 +31,14 @@ const store = {
       console.log(e);
     }
     return value;
+  },
+
+  async clear() {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 

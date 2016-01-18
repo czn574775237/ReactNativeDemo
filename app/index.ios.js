@@ -40,12 +40,12 @@ class App extends React.Component {
 
   componentDidMount() {
     if (__DEV__) {
-      // this._loadInitialState();
+      this._loadInitialState();
     }
   }
 
   componentWillUnmount() {
-    console.log(this._listeners);
+    // console.log(this._listeners);
   }
 
   // !Note: 发现使用 AsyncStorage 会出现异常
@@ -54,7 +54,8 @@ class App extends React.Component {
     try {
       var currentRoute = await AsyncStorage.getItem(STRORAGE_KEY);
       currentRoute = JSON.parse(currentRoute);
-      if (currentRoute && this._navigator) {
+      if (currentRoute && currentRoute.name !=='Dashboard' &&
+        this._navigator) {
         this._navigator.push(currentRoute);
       }
     } catch (error) {
@@ -95,15 +96,14 @@ class App extends React.Component {
       this._navigator = navigator;
       if (navigator) {
         let callback = (event) => {
-          if (__DEV__) {
-            console.log(`Event: ${event.type}`, {
-              route: JSON.stringify(event.data.route),
-              target: event.target,
-              type: event.type
-            });
-          }
+          // if (__DEV__) {
+          //   console.log(`Event: ${event.type}`, {
+          //     route: JSON.stringify(event.data.route),
+          //     target: event.target,
+          //     type: event.type
+          //   });
+          // }
           let { route } = event.data;
-
           this._saveCurrentRoute(JSON.stringify(route));
         }
 

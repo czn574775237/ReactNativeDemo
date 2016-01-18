@@ -1,5 +1,7 @@
 import store from '../store';
-var API_ROOT = 'http://multi-m.beeee.com/api';
+import { API_ROOT } from '../config';
+
+// var API_ROOT = 'http://multi-m.beeee.com/api';
 let URL_TOKEN_KEY = 'token';
 
 export async function http(url, data) {
@@ -15,6 +17,8 @@ export async function http(url, data) {
       url = `${url}&${URL_TOKEN_KEY}=${token}`;
     }
   }
+
+  console.log(`Http request: ${url}`);
 
   let config;
   if (!data) {

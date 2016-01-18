@@ -2,7 +2,10 @@ import React from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
 import * as GoodsAPI from '../apis/GoodsAPI';
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../config';
+import {
+  WINDOW_WIDTH, WINDOW_HEIGHT, API_HOST,
+  API_ROOT
+} from '../config';
 
 let {
   View,
@@ -186,43 +189,91 @@ class GoodsDetail extends React.Component {
 
   _renderGoodsDetailContent() {
     let { goodsImg, goodsDesc } = this.state.item;
+
+
+    // 从 HTML 中提取 <img /> 标签的 src
+    let imgRegExp = /(<[img|IMG].*?src=[\'|\"])(.*?(?:[\.png|\.jpg]))[\'|\"]/gi;
+    let imgs = goodsDesc.match(imgRegExp);
+    let replaceImgRegexp = /<[img|IMG].*?src=\"/;
+    imgs = imgs.map((img) => {
+      let str = img.replace(replaceImgRegexp, '');
+      str = str.slice(0, str.length - 1);
+      str = `${API_HOST}${str}`;  // 补上域名路径
+      return str;
+    });
+    console.log(imgs);
+
+    let html = `
+      <!doctype html>
+      <html>
+      <head>
+        <base href="${API_HOST}">
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width,
+                                         initial-scale=1.0,
+                                         minimum-scale=1.0,
+                                         maximum-scale=1.0,
+                                         user-scalable=no,
+                                         minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+          body { font-size: 12px; overflow: hidden; }
+          * { margin: 0; padding: 0 }
+          img { width: 100%; display: block; }
+          .container { width: 100%; }
+        </style>
+        </head>
+        <body>
+          <div class="container">
+            ${goodsDesc}
+          </div>
+        </body>
+      </html>
+    `;
+
+    console.log(html);
+
+
     return (
-      <View style={[styles.cell]}>
+      <View style={[styles.cell, {
+        paddingBottom: 50
+      }]}>
         <View style={{
           marginTop: 10,
           backgroundColor: '#fff',
           borderTopWidth: 1,
           borderTopColor: '#eee',
           alignItems: 'center',
-          padding: 10
+          padding: 10,
         }}>
           <Text style={{
             flex: 1
           }}>商品详情</Text>
         </View>
         {
-          //<WebView html={goodsDesc} style={{height: 1000}} />
+          // imgs.map((img, i) => {
+          //   return (
+          //     <View key={i} style={{
+          //       flex: 1,
+          //       alignItems: 'stretch'
+          //     }}>
+          //       <Image
+          //         source={{uri: img}}
+          //         style={{
+          //           flex: 1,
+          //           height: 200
+          //         }}
+          //         resizeMode="contain"
+          //       />
+          //     </View>
+          //   );
+          // })
         }
+
         {
-          goodsImg.map((t, i) => {
-            return (
-              <View key={i} style={{
-                // flex: 1,
-                // justifyContent: 'center',
-                // alignItems: 'stretch',
-              }}>
-                <Image
-                  source={{uri: t.thumbImgBig}}
-                  style={{
-                    flex: 1,
-                    width: WINDOW_WIDTH,
-                    height: WINDOW_HEIGHT,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-            );
-          })
+          <WebView html={html} style={{minHeight: WINDOW_HEIGHT/2}} />
         }
       </View>
     );

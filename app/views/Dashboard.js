@@ -24,6 +24,8 @@ class Dashboard extends React.Component {
     GoodsAPI.findAll().then((res) => {
       var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({ goodsList: ds.cloneWithRows(res) });
+    }).catch((err) => {
+      console.log(err);
     });
   }
 

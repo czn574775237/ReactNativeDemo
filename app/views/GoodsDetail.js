@@ -94,7 +94,10 @@ class GoodsDetail extends React.Component {
           item.goodsImg.map((t, i) => {
             return (
               <View key={i} style={styles.swiperItem}>
-                <Image source={{uri: t.thumbImgBig}} style={{flex: 1}} />
+                <Image
+                  source={{uri: t.thumbImgBig}}
+                  style={{flex: 1}}
+                   />
               </View>
             );
           })
@@ -141,6 +144,9 @@ class GoodsDetail extends React.Component {
 
   _renderStoreInfo() {
     let { store } = this.state.item;
+    if (!store.logo) {  // 如果 logo 为 ''，则 <Image /> 渲染时会出现 app crash.
+      store.logo = undefined; // 设为 undefined 则不会出现问题
+    }
     return (
       <View style={{flex: 1}}>
         <View style={{
@@ -148,7 +154,8 @@ class GoodsDetail extends React.Component {
           marginTop: 10,
           backgroundColor: '#fff',
         }}>
-          <Image source={{uri: store.logo }} style={{
+          <Image
+            source={{uri: store.logo }} style={{
             height: 60,
             width: 60,
             padding: 10

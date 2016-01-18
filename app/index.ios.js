@@ -44,6 +44,10 @@ class App extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log(this._listeners);
+  }
+
   // !Note: 发现使用 AsyncStorage 会出现异常
   // 加载上一路由的历史
   async _loadInitialState() {
@@ -100,13 +104,14 @@ class App extends React.Component {
           }
           let { route } = event.data;
 
-          // this._saveCurrentRoute(JSON.stringify(route));
+          this._saveCurrentRoute(JSON.stringify(route));
         }
 
         this._listeners = [
           // navigator.navigationContext.addListener('willfocus', callback),
           navigator.navigationContext.addListener('didfocus', callback)
         ];
+
       }
     }
   }

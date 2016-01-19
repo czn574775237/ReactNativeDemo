@@ -15,6 +15,8 @@ var {
 var STRORAGE_KEY = '@App:currentRoute';
 
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
+// var BaseConfig = Navigator.SceneConfigs.FadeAndroid;
+
 // var CustomLeftToRightGesture = Object.assign({}, BaseConfig.gestures.pop, {
 //   snapVelocity: 8,
 //   edgeHitWidth: WINDOW_WIDTH
@@ -22,6 +24,10 @@ var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 var CustomLeftToRightGesture = Object.assign({}, {
   snapVelocity: 8,
   edgeHitWidth: WINDOW_WIDTH
+});
+
+var FadeSceneConfig = Object.assign({}, Navigator.SceneConfigs.FadeAndroid, {
+
 });
 
 var CustomSceneConfig = Object.assign({}, BaseConfig, {
@@ -40,7 +46,8 @@ class App extends React.Component {
 
   componentDidMount() {
     if (__DEV__) {
-      this._loadInitialState();
+      // this._loadInitialState();
+
     }
   }
 
@@ -70,7 +77,7 @@ class App extends React.Component {
         ref={this._setNavigatorRef.bind(this)}
         style={styles.container}
         initialRoute={{
-          name: 'Dashboard',
+          name: 'Splash',
         }}
         renderScene={this._renderScene.bind(this)}
         configureScene={this._configureScene.bind(this)}
@@ -88,6 +95,9 @@ class App extends React.Component {
   }
 
   _configureScene(route) {
+    if (route.name === 'Splash') {
+      return FadeSceneConfig;
+    }
     return CustomSceneConfig;
   }
 

@@ -2,6 +2,7 @@ import React from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
 import * as GoodsAPI from '../apis/GoodsAPI';
+import { back } from '../libs/navigatorHelper';
 import {
   WINDOW_WIDTH, WINDOW_HEIGHT, API_HOST,
   API_ROOT
@@ -60,7 +61,9 @@ class GoodsDetail extends React.Component {
   _renderNavigation() {
     return (
       <TouchableWithoutFeedback
-        onPress={()=> { this.props.navigator.pop(); }}>
+        onPress={()=> {
+          back(this.props.navigator);
+        }}>
         <View style={styles.iconBackContainer}>
           <Icon
             name="chevron-left"
@@ -233,7 +236,7 @@ class GoodsDetail extends React.Component {
       </html>
     `;
 
-    console.log(html);
+    // console.log(html);
 
 
     return (
@@ -253,27 +256,27 @@ class GoodsDetail extends React.Component {
           }}>商品详情</Text>
         </View>
         {
-          // imgs.map((img, i) => {
-          //   return (
-          //     <View key={i} style={{
-          //       flex: 1,
-          //       alignItems: 'stretch'
-          //     }}>
-          //       <Image
-          //         source={{uri: img}}
-          //         style={{
-          //           flex: 1,
-          //           height: 200
-          //         }}
-          //         resizeMode="contain"
-          //       />
-          //     </View>
-          //   );
-          // })
+          imgs.map((img, i) => {
+            return (
+              <View key={i} style={{
+                flex: 1,
+                alignItems: 'stretch'
+              }}>
+                <Image
+                  source={{uri: img}}
+                  style={{
+                    flex: 1,
+                    height: 200
+                  }}
+                  resizeMode="contain"
+                />
+              </View>
+            );
+          })
         }
 
         {
-          <WebView html={html} style={{minHeight: WINDOW_HEIGHT/2}} />
+          // <WebView html={html} style={{minHeight: WINDOW_HEIGHT/2}} />
         }
       </View>
     );

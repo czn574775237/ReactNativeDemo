@@ -1,4 +1,8 @@
 import React from 'react-native';
+import * as GoodsAPI from '../apis/GoodsAPI';
+import GoodsItem from '../components/GoodsItem';
+import store from '../store';
+import { KEY_APP_CURRENT_ROUTE } from '../constants/StorageKeys';
 
 var {
   StyleSheet,
@@ -10,9 +14,6 @@ var {
   TouchableOpacity
 } = React;
 
-import * as GoodsAPI from '../apis/GoodsAPI';
-import GoodsItem from '../components/GoodsItem';
-
 export default
 class Dashboard extends React.Component {
 
@@ -21,12 +22,27 @@ class Dashboard extends React.Component {
   };
 
   componentDidMount() {
+    this._loadInitialState();
+
     GoodsAPI.findAll().then((res) => {
       var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({ goodsList: ds.cloneWithRows(res) });
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  // 加载上一路由的历史（仅仅首页加载）
+  async _loadInitialState() {
+    try {
+      var currentRoute = await store.getItem(KEY_APP_CURRENT_ROUTE);
+      currentRoute = JSON.parse(currentRoute);
+      if (currentRoute && currentRoute.name !=='Dashboard') {
+        this.props.navigator.push(currentRoute);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 

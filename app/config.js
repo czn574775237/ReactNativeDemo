@@ -10,5 +10,8 @@ module.exports = {
   WINDOW_HEIGHT,
   WINDOW_WIDTH,
   API_HOST,
-  API_ROOT
+  API_ROOT,
+
+
+  SPLASH_INTERVAL: 3000
 };

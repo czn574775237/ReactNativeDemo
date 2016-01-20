@@ -11,12 +11,17 @@ let {
 
 import {
   WINDOW_HEIGHT,
-  WINDOW_WIDTH
+  WINDOW_WIDTH,
+  SPLASH_INTERVAL
 } from '../config';
 
+import {
+  KEY_APP_CURRENT_ROUTE
+} from '../constants/StorageKeys';
 
-const duration = 3000;
-const STRORAGE_KEY = '@App:currentRoute';
+
+const duration = __DEV__ ? 1000 : SPLASH_INTERVAL;
+const STRORAGE_KEY = KEY_APP_CURRENT_ROUTE;
 
 export default
 class Splash extends React.Component {
@@ -26,26 +31,16 @@ class Splash extends React.Component {
   };
 
   componentDidMount() {
-    this._loadInitialState();
     this._startAnimation();
-
+    this._transitionToDashboard();
   }
 
-  async _loadInitialState() {
-    try {
-      var currentRoute = await AsyncStorage.getItem(STRORAGE_KEY);
-      currentRoute = JSON.parse(currentRoute);
-      setTimeout(() => {
-        if (currentRoute && currentRoute.name !== 'Splash') {
-          this.props.navigator.replace(currentRoute);
-        } else {
-          currentRoute = { name: 'Dashboard' };
-          this.props.navigator.replace(currentRoute);
-        }
-      }, duration);
-    } catch (error) {
-      console.log(error);
-    }
+  _transitionToDashboard() {
+    setTimeout(() => {
+      this.props.navigator.push({
+        name: 'Dashboard'
+      });
+    }, duration);
   }
 
   _startAnimation() {

@@ -26,7 +26,7 @@ const store = {
   async getItem(key) {
     let value;
     try {
-      value = await AsyncStorage.getItem(TOKEN_KEY);
+      value = await AsyncStorage.getItem(key);
     } catch (e) {
       console.log(e);
     }

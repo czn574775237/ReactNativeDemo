@@ -1,6 +1,9 @@
 import React from 'react-native';
 import routes from './routes';
-// import store from './store';
+import store from './store';
+import {
+  KEY_APP_CURRENT_ROUTE
+} from './constants/StorageKeys';
 
 var WINDOW_WIDTH = require('Dimensions').get('window').width;
 
@@ -12,7 +15,7 @@ var {
 } = React;
 
 
-var STRORAGE_KEY = '@App:currentRoute';
+const STRORAGE_KEY = KEY_APP_CURRENT_ROUTE;
 
 var BaseConfig = Navigator.SceneConfigs.FloatFromRight;
 // var BaseConfig = Navigator.SceneConfigs.FadeAndroid;
@@ -44,32 +47,6 @@ class App extends React.Component {
     currentRoute: null
   };
 
-  componentDidMount() {
-    if (__DEV__) {
-      // this._loadInitialState();
-
-    }
-  }
-
-  componentWillUnmount() {
-    // console.log(this._listeners);
-  }
-
-  // !Note: 发现使用 AsyncStorage 会出现异常
-  // 加载上一路由的历史
-  async _loadInitialState() {
-    try {
-      var currentRoute = await AsyncStorage.getItem(STRORAGE_KEY);
-      currentRoute = JSON.parse(currentRoute);
-      if (currentRoute && currentRoute.name !=='Dashboard' &&
-        this._navigator) {
-        this._navigator.push(currentRoute);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   render() {
 
     return (
@@ -95,10 +72,15 @@ class App extends React.Component {
   }
 
   _configureScene(route) {
-    if (route.name === 'Splash') {
-      return FadeSceneConfig;
+    switch (route.name) {
+      case 'Splash':
+      case 'Dashboard':
+        return FadeSceneConfig;
+
+      default:
+        return CustomSceneConfig;
     }
-    return CustomSceneConfig;
+
   }
 
   _setNavigatorRef(navigator) {
@@ -126,11 +108,10 @@ class App extends React.Component {
     }
   }
 
-  // !Note: 发现使用 AsyncStorage 会出现异常
   // 记录当前的路由
   async _saveCurrentRoute(currentRoute: string) {
     try {
-      await AsyncStorage.setItem(STRORAGE_KEY, currentRoute);
+      await store.setItem(KEY_APP_CURRENT_ROUTE, currentRoute);
     } catch (error) {
       console.log(error);
     }

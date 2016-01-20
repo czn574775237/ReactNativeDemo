@@ -1,6 +1,6 @@
 # A simple app written by React Native
-![](https://raw.githubusercontent.com/czn574775237/ReactNativeDemo/master/asserts/dashboard.jpeg)
-![](https://raw.githubusercontent.com/czn574775237/ReactNativeDemo/master/asserts/goods-detail.jpeg)
+![](https://raw.githubusercontent.com/czn574775237/ReactNativeDemo/master/asserts/dashboard.png)
+![](https://raw.githubusercontent.com/czn574775237/ReactNativeDemo/master/asserts/goods-detail.png)
 
 ## How to run
 1. Prepare your environment: [Requirements](http://facebook.github.io/react-native/docs/getting-started.html#requirements) and [Android Setup](http://facebook.github.io/react-native/docs/android-setup.html)

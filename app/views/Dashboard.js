@@ -17,16 +17,40 @@ var {
 export default
 class Dashboard extends React.Component {
 
-  state = {
-    goodsList: null
-  };
+  constructor(props) {
+    super(props);
+
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      res: [],
+      goodsList: this.ds.cloneWithRows([])
+    };
+  }
+
 
   componentDidMount() {
     this._loadInitialState();
 
-    GoodsAPI.findAll().then((res) => {
-      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.setState({ goodsList: ds.cloneWithRows(res) });
+    // GoodsAPI.findAll().then((res) => {
+    //   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    //   this.setState({ goodsList: ds.cloneWithRows(res) });
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+    this._fetchData();
+    console.log(this.ds);
+  }
+
+  _fetchData(page: Number, pageNum: Number) {
+    this.page = page = page || 1;
+    this.pageNum = pageNum = pageNum || 10;
+    GoodsAPI.findAll({ page, pageNum }).then((res) => {
+      let { goodsList } = this.state;
+      res = this.state.res.concat(res);
+      this.setState({
+        goodsList: this.ds.cloneWithRows(res),
+        res
+      });
     }).catch((err) => {
       console.log(err);
     });
@@ -62,6 +86,7 @@ class Dashboard extends React.Component {
 
     return (
       <ListView
+        onScroll={this._handleScrollFetchData.bind(this)}
         dataSource={goodsList}
         renderRow={(item, t, i) => {
           return (
@@ -88,6 +113,10 @@ class Dashboard extends React.Component {
       storeId,
       goodsId
     });
+  }
+
+  _handleScrollFetchData() {
+    // this._fetchData(2);
   }
 }
 
